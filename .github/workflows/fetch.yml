@@ -1,0 +1,25 @@
+name: Fetch SR OS 2026
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Fetch SR page
+        run: |
+          curl -A "Mozilla/5.0" https://www.sverigesradio.se/amne/os-2026 > os2026.html
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add os2026.html
+          git commit -m "Update SR OS 2026" || echo "No changes"
+          git push
